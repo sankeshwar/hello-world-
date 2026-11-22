@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TaskFlow — Graduate Engineer Project</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><span class="mark">TF</span><span>TaskFlow</span><span class="tag">FLASK + SQLITE</span></header>
+    <section class="hero">
+      <p class="eyebrow">STAY FOCUSED · SHIP YOUR WORK</p>
+      <h1>Make progress,<br><em>one task at a time.</em></h1>
+      <p class="sub">A simple task manager built with Python, Flask and SQLite.</p>
+    </section>
+    <section class="panel">
+      <h2>Add a task</h2>
+      <form action="{{ url_for('add_task') }}" method="post" class="task-form">
+        <label for="title">Task title</label>
+        <input id="title" name="title" maxlength="120" placeholder="What needs to get done?" required>
+        <label for="description">Description <span>(optional)</span></label>
+        <input id="description" name="description" placeholder="Add a little detail">
+        <button type="submit">Add task <b>＋</b></button>
+      </form>
+    </section>
+    <section class="tasks">
+      <div class="section-head"><h2>Your tasks</h2><span>{{ tasks|length }} total</span></div>
+      {% if tasks %}
+        {% for task in tasks %}
+        <article class="task {% if task['completed'] %}done{% endif %}">
+          <div class="task-copy"><strong>{{ task['title'] }}</strong>{% if task['description'] %}<p>{{ task['description'] }}</p>{% endif %}</div>
+          <div class="actions">
+            <form action="{{ url_for('toggle_task', task_id=task['id']) }}" method="post"><button class="secondary" type="submit">{% if task['completed'] %}Undo{% else %}Complete{% endif %}</button></form>
+            <form action="{{ url_for('delete_task', task_id=task['id']) }}" method="post"><button class="delete" type="submit" aria-label="Delete task">×</button></form>
+          </div>
+        </article>
+        {% endfor %}
+      {% else %}
+        <div class="empty"><span>✳</span><p>No tasks yet. Add your first one above.</p></div>
+      {% endif %}
+    </section>
+    <footer>Built as a learning project · Python · Flask · SQLite · REST API</footer>
+  </main>
+</body>
+</html>
